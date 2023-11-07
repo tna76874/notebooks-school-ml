@@ -4,9 +4,12 @@ on:
   push:
     branches:
       - master
+      - main
       - stable
   pull_request:
-    branches: [ "master" ]
+    branches:
+      - master
+      - main
 
 jobs:
 
