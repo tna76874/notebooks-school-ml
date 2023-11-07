@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  notebook:
+    image: ghcr.io/tna76874/schoolnotebookml
+    build:
+      context: .
+      dockerfile: Dockerfile_build
+    environment:
+     - SETUP_STATUS=testing
+    ports:
+      - 8888:8888
+    container_name:   schoolnotebooksml
+    command: "jupyter notebook \
+      --NotebookApp.default_url=/lab/ \
+      --ip=0.0.0.0 \
+      --port=8888 \
+      --NotebookApp.token=''"

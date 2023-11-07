@@ -1,0 +1,30 @@
+FROM ghcr.io/tna76874/schoolnotebookbase:stable
+
+USER root
+
+## ENSURE ENTRYPOINTS WITH SCRIPTS
+COPY ./scripts/docker-entrypoint.sh /
+COPY ./scripts/run_on_init /usr/local/bin/
+RUN chmod 775 /usr/local/bin/run_on_init
+
+ARG NB_USER=jovyan
+ARG NB_UID=1000
+ENV USER ${NB_USER}
+ENV NB_UID ${NB_UID}
+ENV HOME /home/${NB_USER}
+
+RUN chmod 775 /docker-entrypoint.sh
+
+USER ${NB_USER}
+
+RUN pip install --no-cache-dir pipreqs &&\
+    cd /home/${NB_USER} &&\
+    wget https://radimrehurek.com/gensim/_downloads/0235ae8eb61e9f2951b23b8fa222b7d8/run_word2vec.ipynb &&\
+    wget https://radimrehurek.com/gensim/_downloads/ef9e24c923ba54db657a7a8d47758404/run_word2vec.py &&\
+    pipreqs /home/${NB_USER} &&\
+    pip install --no-cache-dir -r /home/${NB_USER}/requirements.txt &&\
+    rm -rf requirements.txt
+
+RUN rm -rf /home/${NB_USER}/work
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
